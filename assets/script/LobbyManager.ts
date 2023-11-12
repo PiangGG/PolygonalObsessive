@@ -7,14 +7,14 @@ export class Lobby extends Component {
     protected onLoad(): void {
         console.log("LobbyManager onLoad");
 
-        const clickEventHandler = new EventHandler();
-        clickEventHandler.target = this.node; // 这个 node 节点是你的事件处理代码组件所属的节点
-        clickEventHandler.component = 'Lobby';// 这个是脚本类名
-        clickEventHandler.handler = 'StartGamecallback';
-        clickEventHandler.customEventData = 'foobar';
+        // const clickEventHandler = new EventHandler();
+        // clickEventHandler.target = this.node; // 这个 node 节点是你的事件处理代码组件所属的节点
+        // clickEventHandler.component = 'Lobby';// 这个是脚本类名
+        // clickEventHandler.handler = 'StartGamecallback';
+        // clickEventHandler.customEventData = 'foobar';
 
-        const button = this.node.getComponent(Button);
-        button.clickEvents.push(clickEventHandler);
+        // const button = this.node.getComponent(Button);
+        // button.clickEvents.push(clickEventHandler);
 
         // if(this.StartButton)
         // {
@@ -36,8 +36,8 @@ export class Lobby extends Component {
 
     StartGamecallback(event: Event, customEventData: string) {
       
-        const node = event.target as Node;
-        const button = node.getComponent(Button);
+        // const node = event.target as Node;
+        // const button = node.getComponent(Button);
         console.log(customEventData);
     }
 
