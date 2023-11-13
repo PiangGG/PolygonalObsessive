@@ -1,5 +1,5 @@
-import { _decorator, Component, Node, SystemEvent ,EventTouch,Input,input,Prefab} from 'cc';
-import { PolygonalManager } from '../script/PolygonalManager';
+import { _decorator, Component, Node ,EventTouch,Input,input,Prefab,Vec2} from 'cc';
+import { PolygonalManager } from '../Polygonal/PolygonalManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('PolygonalSpawner')
@@ -17,6 +17,7 @@ export class PolygonalSpawner extends Component {
     update(deltaTime: number) 
     {
         
+
     }
 
     SpawnPolygonal(event: EventTouch)
@@ -24,9 +25,15 @@ export class PolygonalSpawner extends Component {
         console.log(event.getLocation());  // Location on screen space
         console.log(event.getUILocation()); 
 
+        const location_1:Vec2 = event.getUILocation();
+        
        if(this.Polygonal)
        {
-            PolygonalManager.instance().Spawn(event.getUILocation(),this.Polygonal)
+            const SpawnLocation : Vec2 = new Vec2(event.getUILocation().x-360,900);
+            PolygonalManager.instance().Spawn(SpawnLocation,this.Polygonal)
+
+            // const SpawnLocation2 : Vec2 = new Vec2(event.getUILocation().x-100,1350);
+            // PolygonalManager.instance().Spawn(SpawnLocation2,this.Polygonal)
        }    
     }
 }

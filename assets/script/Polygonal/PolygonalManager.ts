@@ -40,8 +40,16 @@ z
                 let scene = director.getScene();
                 if(scene)
                 {
-                    scene.addChild(LocalPolygonal);
-                    LocalPolygonal.setPosition(location.x,1400,0);
+                    var child = scene.getChildByName("UI");
+
+                    if(child)
+                    {
+                        child.addChild(LocalPolygonal);
+                        LocalPolygonal.setPosition(location.x,location.y);
+                    }else
+                    {
+                        console.log("UI节点没找到");
+                    }
                 }else
                 {
                     console.log("scene节点没找到");
