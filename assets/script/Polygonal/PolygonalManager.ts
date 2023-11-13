@@ -41,7 +41,7 @@ z
                 if(scene)
                 {
                     scene.addChild(LocalPolygonal);
-                    LocalPolygonal.setPosition(location.x,location.y,0);
+                    LocalPolygonal.setPosition(location.x,1400,0);
                 }else
                 {
                     console.log("scene节点没找到");

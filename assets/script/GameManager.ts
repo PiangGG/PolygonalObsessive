@@ -1,10 +1,10 @@
-import { _decorator, Component, Node ,PhysicsSystem2D,EPhysics2DDrawFlags} from 'cc';
+import { _decorator, Component, Node ,PhysicsSystem2D,EPhysics2DDrawFlags, CCBoolean} from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameManager')
 export class GameManager extends Component {
 
-    @property(Boolean)
+    @property(CCBoolean)
     bShowDebugPhysics2D:Boolean = false;
     
     protected onLoad(): void {
