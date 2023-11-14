@@ -1,4 +1,6 @@
-import { _decorator, Component, instantiate, Node, Prefab, Vec2 ,director} from 'cc';
+import { _decorator, Component, instantiate, Node, Prefab, Vec2 ,director, Color} from 'cc';
+
+import { Attribute } from '../Polygonal/PolygonalAttribute';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlolygonalManager')
@@ -28,12 +30,18 @@ z
         
     }
 
-    Spawn(location:Vec2,Polygonal:Prefab)
+    Spawn(location:Vec2,Polygonal:Prefab,color:Color)
     {
         if(Polygonal)
         {
             const LocalPolygonal = instantiate(Polygonal);
             console.log("生成位置:x = "+location);
+
+            let attribute = LocalPolygonal.getComponent(Attribute)
+            if(attribute)
+            {
+                attribute.SetInfo(color,3);
+            }
 
             if(LocalPolygonal)
             {

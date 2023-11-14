@@ -1,12 +1,16 @@
-import { _decorator, Component, Node ,EventTouch,Input,input,Prefab,Vec2} from 'cc';
+import { _decorator, Component, Node ,EventTouch,Input,input,Prefab,Vec2, Color} from 'cc';
 import { PolygonalManager } from '../Polygonal/PolygonalManager';
+import { Lobby } from '../LobbyManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('PolygonalSpawner')
 export class PolygonalSpawner extends Component {
-    
+
+    @property(Color)
+    public colors:Color[] = Color[3];
+
     @property(Prefab)
-    public Polygonal: Prefab = null;
+    public Polygonals: Prefab[] = Prefab[2];
 
     start() 
     {
@@ -27,13 +31,41 @@ export class PolygonalSpawner extends Component {
 
         const location_1:Vec2 = event.getUILocation();
         
-       if(this.Polygonal)
-       {
-            const SpawnLocation : Vec2 = new Vec2(event.getUILocation().x-360,900);
-            PolygonalManager.instance().Spawn(SpawnLocation,this.Polygonal)
+        let result: [Color, Prefab] = Lobby.instance().RendomPoly();
+        
+        if(result[1])
+        {
+                console.log("随机预制体成功:"+result[1].toString);
+                const SpawnLocation : Vec2 = new Vec2(event.getUILocation().x-360,900);
+                PolygonalManager.instance().Spawn(SpawnLocation,result[1],result[0])
 
-            // const SpawnLocation2 : Vec2 = new Vec2(event.getUILocation().x-100,1350);
-            // PolygonalManager.instance().Spawn(SpawnLocation2,this.Polygonal)
-       }    
+                // const SpawnLocation2 : Vec2 = new Vec2(event.getUILocation().x-100,1350);
+                // PolygonalManager.instance().Spawn(SpawnLocation2,this.Polygonal)
+        }else
+        {
+                console.log("随机预制体失败");
+        }    
+    }
+
+    public RendomPoly():[Color,Prefab]
+    {
+        console.log("随机基础多边形和颜色");
+
+        console.log(this.colors.length);
+        console.log(this.Polygonals.length);
+
+        let  randomColor:Color = null;
+        if(this.colors)
+        {
+            randomColor = this.colors[Math.floor(Math.random() * this.colors.length)];
+        }
+
+        let  randomPrefab:Prefab = null;
+        if(this.Polygonals)
+        {
+            randomPrefab = this.Polygonals[Math.floor(Math.random() * length)];
+        }
+       
+        return [randomColor, randomPrefab];
     }
 }
