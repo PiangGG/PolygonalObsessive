@@ -234,39 +234,35 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "colors": [
-      {
-        "__type__": "cc.Color",
-        "r": 255,
-        "g": 0,
-        "b": 0,
-        "a": 255
-      },
-      {
-        "__type__": "cc.Color",
-        "r": 0,
-        "g": 255,
-        "b": 0,
-        "a": 255
-      },
-      {
-        "__type__": "cc.Color",
-        "r": 0,
-        "g": 0,
-        "b": 255,
-        "a": 255
-      }
-    ],
-    "Polygonals": [
-      {
-        "__uuid__": "8628a323-7cca-464b-b351-3e3cf658bbb8",
-        "__expectedType__": "cc.Prefab"
-      },
-      {
-        "__uuid__": "ffec4024-9f18-43e6-a54b-d4fda5ad3565",
-        "__expectedType__": "cc.Prefab"
-      }
-    ],
+    "color_r": {
+      "__type__": "cc.Color",
+      "r": 255,
+      "g": 0,
+      "b": 0,
+      "a": 255
+    },
+    "color_g": {
+      "__type__": "cc.Color",
+      "r": 0,
+      "g": 255,
+      "b": 0,
+      "a": 255
+    },
+    "color_b": {
+      "__type__": "cc.Color",
+      "r": 0,
+      "g": 0,
+      "b": 255,
+      "a": 255
+    },
+    "Prefab_1": {
+      "__uuid__": "8628a323-7cca-464b-b351-3e3cf658bbb8",
+      "__expectedType__": "cc.Prefab"
+    },
+    "Prefab_2": {
+      "__uuid__": "ffec4024-9f18-43e6-a54b-d4fda5ad3565",
+      "__expectedType__": "cc.Prefab"
+    },
     "_id": "32FkCy0UVDQIRmXqheNSdk"
   },
   {

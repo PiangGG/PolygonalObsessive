@@ -6,10 +6,19 @@ export class Lobby extends Component {
 
    
     @property(Color)
-    public colors:Color[] = [];
+    public color_r = null;
+    @property(Color)
+    public color_g= null;
+    @property(Color)
+    public color_b = null;
+    public static colors:Color[] = [];
 
     @property(Prefab)
-    public Polygonals: Prefab[] = [];
+    public Prefab_1 : Prefab = null; 
+    @property(Prefab)
+    public Prefab_2 : Prefab = null; 
+    @property(Prefab)
+    public static Polygonals: Prefab[] = [];
 
     private static _instance: Lobby;
 
@@ -26,9 +35,13 @@ export class Lobby extends Component {
     protected onLoad(): void 
     {
         console.log("LobbyManager onLoad");
-        this.colors.push(new Color(255, 0, 0)); // 红色
-        this.colors.push(new Color(0, 255, 0)); // 绿色
-        this.colors.push(new Color(0, 0, 255)); // 蓝色
+        Lobby.colors.push(this.color_r); // 红色
+        Lobby.colors.push(this.color_g); // 绿色
+        Lobby.colors.push(this.color_b); // 蓝色
+
+        Lobby.Polygonals.push(this.Prefab_1);
+        Lobby.Polygonals.push(this.Prefab_2);
+
     }
 
     start() 
@@ -39,9 +52,10 @@ export class Lobby extends Component {
         // this.colors.push(color_R);
         // this.colors.push(color_G);
         // this.colors.push(color_B);
-        this.colors.forEach((color, index) => {
+        Lobby.colors.forEach((color, index) => {
             console.log(`Color ${index + 1}: R=${color.r}, G=${color.g}, B=${color.b}, A=${color.a}`);
         });
+        console.log(Lobby.colors.length);
     }
 
     update(deltaTime: number) {
@@ -60,23 +74,23 @@ export class Lobby extends Component {
 
     public RendomPoly():[Color,Prefab]
     {
-        this.colors.forEach((color, index) => {
-            console.log(`Color ${index + 1}: R=${color.r}, G=${color.g}, B=${color.b}, A=${color.a}`);
-        });
+        // Lobby.colors.forEach((color, index) => {
+        //     console.log(`Color ${index + 1}: R=${color.r}, G=${color.g}, B=${color.b}, A=${color.a}`);
+        // });
         
         console.log("随机基础多边形和颜色");
 
-        console.log(this.colors.length);
-        console.log(this.Polygonals.length);
+        console.log(Lobby.colors.length);
+        console.log(Lobby.Polygonals.length);
 
         let  randomColor:Color = null;
-        if(this.colors)
+        if(Lobby.colors)
         {
-            let index = Math.random() * this.colors.length;
+            let index = Math.floor(Math.random() * Lobby.colors.length);
             console.log("颜色索引:"+index);
-            if(this.colors[0])
+            if(Lobby.colors[index])
             {
-                randomColor = this.colors[0];
+                randomColor = Lobby.colors[index];
                 console.log("设置随机颜色");
             }
             else
@@ -86,13 +100,13 @@ export class Lobby extends Component {
         }
 
         let  randomPrefab:Prefab = null;
-        if(this.Polygonals)
+        if(Lobby.Polygonals)
         {
-            let index = Math.random() * length
+            let index = Math.floor(Math.random() * Lobby.Polygonals.length);
             console.log("预制体索引:"+index);
-            if(this.Polygonals[0])
+            if(Lobby.Polygonals[index])
             {
-                randomPrefab = this.Polygonals[0];
+                randomPrefab = Lobby.Polygonals[index];
                 console.log("设置随机预制体");
             }
             else

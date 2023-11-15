@@ -20,10 +20,11 @@ export class Attribute extends Component {
     {
         this.color = color;
         this.Edges = number;
-        let sprite = this.node.parent.getComponent(Sprite)
+        let sprite = this.node.getComponent(Sprite);
+        console.log(this.node);
         if(sprite)
         {
-            sprite.color =  this.color;
+            sprite.color =  color;
         }else
         {
             console.log("没找到精灵");
