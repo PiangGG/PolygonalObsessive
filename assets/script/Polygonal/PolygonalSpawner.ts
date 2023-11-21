@@ -1,6 +1,7 @@
-import { _decorator, Component, Node ,EventTouch,Input,input,Prefab,Vec2, Color} from 'cc';
+import { _decorator, Component, Node ,EventTouch,Input,input,Prefab,Vec2, Color, CCInteger} from 'cc';
 import { PolygonalManager } from '../Polygonal/PolygonalManager';
 import { Lobby } from '../LobbyManager';
+import { Attribute } from '../Polygonal/PolygonalAttribute';
 const { ccclass, property } = _decorator;
 
 @ccclass('PolygonalSpawner')
@@ -12,10 +13,23 @@ export class PolygonalSpawner extends Component {
     @property(Prefab)
     public Polygonals: Prefab[] = Prefab[2];
 
+    @property(CCInteger)
+    BeginPlayRendomPloyNum:number = 5;
     start() 
     {
         console.log("开始监听触摸结束");  
         input.on(Input.EventType.TOUCH_END, this.SpawnPolygonal, this);
+
+        //游戏开始随机一定数量的个多边形
+        
+        for(let index:number = 0;index < this.BeginPlayRendomPloyNum;index++)
+        {
+            let result: [Color, number] = Lobby.instance().RendomPoly();
+            if(Lobby.PolyTopBarOut)
+            {
+                PolygonalManager.instance().SpawnPloy(index,Lobby.PolyTopBarOut,result[1],result[0]);
+            }
+        }
     }
 
     update(deltaTime: number) 
@@ -31,41 +45,39 @@ export class PolygonalSpawner extends Component {
 
         const location_1:Vec2 = event.getUILocation();
         
-        let result: [Color, Prefab] = Lobby.instance().RendomPoly();
+        // let result: [Color, Prefab] = Lobby.instance().RendomPolyPrefab();
         
-        if(result[1])
+        // if(result[1])
+        // {
+        //         console.log("随机预制体成功:"+result[1].toString);
+        //         const SpawnLocation : Vec2 = new Vec2(event.getUILocation().x-360,900);
+        //         PolygonalManager.instance().Spawn(SpawnLocation,result[1],result[0])
+        // }
+        // else
+        // {
+        //         console.log("随机预制体失败");
+        // }
+        if(PolygonalManager.instance().PolyTopBarMap.has(0))
         {
-                console.log("随机预制体成功:"+result[1].toString);
+            let var1 =  PolygonalManager.instance().PolyTopBarMap.get(0);
+            if(var1)
+            {
+                let attribute:Attribute = var1.getComponent(Attribute)
                 const SpawnLocation : Vec2 = new Vec2(event.getUILocation().x-360,900);
-                PolygonalManager.instance().Spawn(SpawnLocation,result[1],result[0])
-
-                // const SpawnLocation2 : Vec2 = new Vec2(event.getUILocation().x-100,1350);
-                // PolygonalManager.instance().Spawn(SpawnLocation2,this.Polygonal)
-        }else
-        {
-                console.log("随机预制体失败");
-        }    
-    }
-
-    public RendomPoly():[Color,Prefab]
-    {
-        console.log("随机基础多边形和颜色");
-
-        console.log(this.colors.length);
-        console.log(this.Polygonals.length);
-
-        let  randomColor:Color = null;
-        if(this.colors)
-        {
-            randomColor = this.colors[Math.floor(Math.random() * this.colors.length)];
-        }
-
-        let  randomPrefab:Prefab = null;
-        if(this.Polygonals)
-        {
-            randomPrefab = this.Polygonals[Math.floor(Math.random() * length)];
+                if( PolygonalManager.PolyEdgesMap.has(attribute.Edges))
+                {
+                    const var2 =  PolygonalManager.PolyEdgesMap.get(attribute.Edges)
+                    if(var2)
+                    {
+                        PolygonalManager.instance().Spawn(SpawnLocation,var2,attribute.color)
+                    }
+                    
+                }
+                var1.destroy();
+                PolygonalManager.instance().PolyTopBarMap.delete(0)
+                PolygonalManager.instance().MoveLeft();
+            }
         }
        
-        return [randomColor, randomPrefab];
     }
 }

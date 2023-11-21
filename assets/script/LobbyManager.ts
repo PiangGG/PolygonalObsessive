@@ -20,6 +20,11 @@ export class Lobby extends Component {
     @property(Prefab)
     public static Polygonals: Prefab[] = [];
 
+    @property(Prefab)
+    public PolyTopBarIn : Prefab = null; 
+    @property(Prefab)
+    public static PolyTopBarOut : Prefab = null; 
+    
     private static _instance: Lobby;
 
     public static instance(){
@@ -42,20 +47,13 @@ export class Lobby extends Component {
         Lobby.Polygonals.push(this.Prefab_1);
         Lobby.Polygonals.push(this.Prefab_2);
 
+        Lobby.PolyTopBarOut = this.PolyTopBarIn;
+       
     }
 
     start() 
     {
-        // let color_R:Color = new Color(255,0,0,255)
-        // let color_G:Color = new Color(0,255,0,255)
-        // let color_B:Color = new Color(0,0,255,255)
-        // this.colors.push(color_R);
-        // this.colors.push(color_G);
-        // this.colors.push(color_B);
-        Lobby.colors.forEach((color, index) => {
-            console.log(`Color ${index + 1}: R=${color.r}, G=${color.g}, B=${color.b}, A=${color.a}`);
-        });
-        console.log(Lobby.colors.length);
+      
     }
 
     update(deltaTime: number) {
@@ -72,7 +70,7 @@ export class Lobby extends Component {
         
     }
 
-    public RendomPoly():[Color,Prefab]
+    public RendomPolyPrefab():[Color,Prefab]
     {
         // Lobby.colors.forEach((color, index) => {
         //     console.log(`Color ${index + 1}: R=${color.r}, G=${color.g}, B=${color.b}, A=${color.a}`);
@@ -116,6 +114,34 @@ export class Lobby extends Component {
         }
         //console.log("随机基础多边形"+randomPrefab.toString()+"和颜色"+randomColor.toString());
         return [randomColor, randomPrefab];
+    }
+
+    public RendomPoly():[Color,number]
+    {
+        let  randomColor:Color = null;
+        if(Lobby.colors)
+        {
+            let index = Math.floor(Math.random() * Lobby.colors.length);
+            console.log("颜色索引:"+index);
+            if(Lobby.colors[index])
+            {
+                randomColor = Lobby.colors[index];
+                console.log("设置随机颜色");
+            }
+            else
+            {
+                console.log("设置随机颜色失败");
+            }
+        }
+
+        let  randomPoly:number = null;
+        if(Lobby.Polygonals)
+        {
+            let index = Math.floor(Math.random() * 2);
+            randomPoly = index;
+        }
+        console.log("随机基础多边形边数:"+randomPoly+"和颜色:"+randomColor);
+        return [randomColor, randomPoly];
     }
 }
 
