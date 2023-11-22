@@ -57,12 +57,12 @@ export class PolygonalSpawner extends Component {
         // {
         //         console.log("随机预制体失败");
         // }
-        if(PolygonalManager.instance().PolyTopBarMap.has(0))
+        if(PolygonalManager.instance().PolyTopBarMap.has(0)&&PolygonalManager.instance().PolyTopBarMap.has(1))
         {
-            let var1 =  PolygonalManager.instance().PolyTopBarMap.get(0);
-            if(var1)
+            let PolyTopBarMap0 =  PolygonalManager.instance().PolyTopBarMap.get(0);
+            if(PolyTopBarMap0)
             {
-                let attribute:Attribute = var1.getComponent(Attribute)
+                let attribute:Attribute = PolyTopBarMap0.getComponent(Attribute)
                 const SpawnLocation : Vec2 = new Vec2(event.getUILocation().x-360,900);
                 if( PolygonalManager.PolyEdgesMap.has(attribute.Edges))
                 {
@@ -73,10 +73,30 @@ export class PolygonalSpawner extends Component {
                     }
                     
                 }
-                var1.destroy();
+                PolyTopBarMap0.destroy();
                 PolygonalManager.instance().PolyTopBarMap.delete(0)
-                PolygonalManager.instance().MoveLeft();
             }
+
+            let PolyTopBarMap1 =  PolygonalManager.instance().PolyTopBarMap.get(1);
+            if(PolyTopBarMap1)
+            {
+                let attribute:Attribute = PolyTopBarMap1.getComponent(Attribute)
+                const SpawnLocation : Vec2 = new Vec2(event.getUILocation().x-360,1100);
+                if( PolygonalManager.PolyEdgesMap.has(attribute.Edges))
+                {
+                    const var2 =  PolygonalManager.PolyEdgesMap.get(attribute.Edges)
+                    if(var2)
+                    {
+                        PolygonalManager.instance().Spawn(SpawnLocation,var2,attribute.color)
+                    }
+                    
+                }
+                PolyTopBarMap1.destroy();
+                PolygonalManager.instance().PolyTopBarMap.delete(1)
+            }
+
+            PolygonalManager.instance().MoveLeft();
+
         }
        
     }

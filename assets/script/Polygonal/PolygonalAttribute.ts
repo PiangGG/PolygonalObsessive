@@ -1,4 +1,4 @@
-import { _decorator, color, Component, Node ,Color, Sprite, CCInteger, SpriteFrame} from 'cc';
+import { _decorator, color, Component, Node ,Color, Sprite, CCInteger, SpriteFrame, CCBoolean,Scheduler,macro} from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('Attribute')
@@ -13,6 +13,11 @@ export class Attribute extends Component {
     @property(SpriteFrame)
     SpriteFrame4:SpriteFrame = null;
 
+    @property(CCInteger)
+    index:number = -1;
+    @property(CCBoolean)
+    bupdate:boolean = false;
+
     protected onLoad(): void 
     {
         
@@ -23,6 +28,10 @@ export class Attribute extends Component {
 
     update(deltaTime: number) {
         
+        // if(this.bupdate)
+        // {
+
+        // }
     }
 
     SetInfo(color:Color,number:number)
@@ -61,6 +70,20 @@ export class Attribute extends Component {
         {
             console.log("没找到精灵");
         }
+    }
+
+    SetTimerTickLocation(index:number)
+    {
+        this.schedule(this.SetTimerTickLocationCallback, 0.0167,macro.REPEAT_FOREVER,0);
+    }
+
+    SetTimerTickLocationCallback(index:number)
+    {
+        console.log("ticktime"+index);
+    }
+    protected onDestroy(): void 
+    {
+        
     }
 }
 

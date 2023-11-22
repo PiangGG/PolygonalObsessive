@@ -1,6 +1,8 @@
 import { _decorator, Component, instantiate, Node, Prefab, Vec2 ,director, Color} from 'cc';
 
 import { Attribute } from '../Polygonal/PolygonalAttribute';
+import { Lobby } from '../LobbyManager';
+
 const { ccclass, property } = _decorator;
 
 @ccclass('PlolygonalManager')
@@ -157,7 +159,37 @@ export class PolygonalManager extends Component {
             console.log("生成Polygonal失败"+location);
         }
     }
-    
+
+    MoveLeft()
+    {
+        if(this.PolyTopBarMap.has(2))
+        {
+            this.PolyTopBarMap.set(0,this.PolyTopBarMap.get(2))
+            if(this.PolyTopBarMap.has(0))
+            {
+                let attribute = this.PolyTopBarMap.get(0).getComponent(Attribute)
+                attribute.SetTimerTickLocation(0)
+            }
+        }
+
+        if(this.PolyTopBarMap.has(3))
+        {
+            this.PolyTopBarMap.set(1,this.PolyTopBarMap.get(3))
+        }
+        if(this.PolyTopBarMap.has(4))
+        {
+            this.PolyTopBarMap.set(2,this.PolyTopBarMap.get(4))
+        }
+
+        for(let index:number = 3;index < 5;index++)
+        {
+            let result: [Color, number] = Lobby.instance().RendomPoly();
+            if(Lobby.PolyTopBarOut)
+            {
+                PolygonalManager.instance().SpawnPloy(index,Lobby.PolyTopBarOut,result[1],result[0]);
+            }
+        }
+    }
 }
 
 
