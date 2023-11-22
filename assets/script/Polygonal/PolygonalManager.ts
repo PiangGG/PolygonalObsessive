@@ -58,7 +58,7 @@ export class PolygonalManager extends Component {
         
     }
 
-    SpawnPloy(slotIndex:number,PolyTopBar:Prefab,PolyNumber:number,color:Color)
+    SpawnPloy(slotIndex:number,PolyTopBar:Prefab,PolyNumber:number,color:Color,bMove:Boolean)
     {
         if(PolyTopBar)
         {
@@ -84,7 +84,7 @@ export class PolygonalManager extends Component {
                         switch(slotIndex)
                         {
                             case 0:
-                                LocalPolygonal.setPosition(slotIndex*128-10,530);
+                                LocalPolygonal.setPosition(slotIndex*128-10,-555);
                                 break;
                             // case 1:
                             //     LocalPolygonal.setPosition(location.x,location.y);
@@ -92,14 +92,30 @@ export class PolygonalManager extends Component {
                             // case 2:
                             //     LocalPolygonal.setPosition(location.x,location.y);
                             //     break;
-                            // case 3:
-                            //     LocalPolygonal.setPosition(location.x,location.y);
-                            //     break;
-                            // case 4:
-                            //     LocalPolygonal.setPosition(location.x,location.y);
-                            //     break;
+                            case 3:
+                                if(bMove)
+                                {
+                                    LocalPolygonal.setPosition((slotIndex+2)*128-10+5*slotIndex,-555);
+                                    let attribute = LocalPolygonal.getComponent(Attribute)
+                                    attribute.SetTimerTickLocation(3)
+                                }else
+                                {
+                                    LocalPolygonal.setPosition(slotIndex*128-10+5*slotIndex,-555);
+                                }
+                                break;
+                            case 4:
+                                if(bMove)
+                                {
+                                    LocalPolygonal.setPosition((slotIndex+2)*128-10+5*slotIndex,-555);
+                                    let attribute = LocalPolygonal.getComponent(Attribute)
+                                    attribute.SetTimerTickLocation(4)
+                                }else
+                                {
+                                    LocalPolygonal.setPosition(slotIndex*128-10+5*slotIndex,-555);
+                                }
+                                break;
                             default:
-                                LocalPolygonal.setPosition(slotIndex*128-10+5*slotIndex,530);
+                                LocalPolygonal.setPosition(slotIndex*128-10+5*slotIndex,-555);
                                 break;
                         }
                         //LocalPolygonal.setPosition(slotIndex*128+10,530);
@@ -175,10 +191,20 @@ export class PolygonalManager extends Component {
         if(this.PolyTopBarMap.has(3))
         {
             this.PolyTopBarMap.set(1,this.PolyTopBarMap.get(3))
+            if(this.PolyTopBarMap.has(1))
+            {
+                let attribute = this.PolyTopBarMap.get(1).getComponent(Attribute)
+                attribute.SetTimerTickLocation(1)
+            }
         }
         if(this.PolyTopBarMap.has(4))
         {
             this.PolyTopBarMap.set(2,this.PolyTopBarMap.get(4))
+            if(this.PolyTopBarMap.has(2))
+            {
+                let attribute = this.PolyTopBarMap.get(2).getComponent(Attribute)
+                attribute.SetTimerTickLocation(2)
+            }
         }
 
         for(let index:number = 3;index < 5;index++)
@@ -186,7 +212,7 @@ export class PolygonalManager extends Component {
             let result: [Color, number] = Lobby.instance().RendomPoly();
             if(Lobby.PolyTopBarOut)
             {
-                PolygonalManager.instance().SpawnPloy(index,Lobby.PolyTopBarOut,result[1],result[0]);
+                PolygonalManager.instance().SpawnPloy(index,Lobby.PolyTopBarOut,result[1],result[0],true);
             }
         }
     }

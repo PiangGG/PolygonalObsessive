@@ -1,4 +1,4 @@
-import { _decorator, color, Component, Node ,Color, Sprite, CCInteger, SpriteFrame, CCBoolean,Scheduler,macro} from 'cc';
+import { _decorator, color, Component, Node ,Color, Sprite, CCInteger, SpriteFrame, CCBoolean,Scheduler,macro, PolygonCollider2D,Contact2DType,IPhysics2DContact,AudioSource} from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('Attribute')
@@ -15,15 +15,23 @@ export class Attribute extends Component {
 
     @property(CCInteger)
     index:number = -1;
-    @property(CCBoolean)
-    bupdate:boolean = false;
-
+    @property(CCInteger)
+    MoveSpeed:number = 15;
     protected onLoad(): void 
     {
         
     }
-    start() {
+    start() 
+    {
+        let polygonCollider2D:PolygonCollider2D = this.node.getComponent(PolygonCollider2D);
 
+        if(polygonCollider2D)
+        {
+            polygonCollider2D.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+            polygonCollider2D.on(Contact2DType.END_CONTACT, this.onEndContact, this);
+            polygonCollider2D.on(Contact2DType.PRE_SOLVE, this.onPreSolve, this);
+            polygonCollider2D.on(Contact2DType.POST_SOLVE, this.onPostSolve, this);
+        }
     }
 
     update(deltaTime: number) {
@@ -74,17 +82,95 @@ export class Attribute extends Component {
 
     SetTimerTickLocation(index:number)
     {
+        //不管是否激活定时器，先清除定时器
+        this.unschedule(this.SetTimerTickLocationCallback);
+        //设置index，根据index移动
+        this.index = index;
+        //设置定时器
         this.schedule(this.SetTimerTickLocationCallback, 0.0167,macro.REPEAT_FOREVER,0);
     }
 
     SetTimerTickLocationCallback(index:number)
     {
-        console.log("ticktime"+index);
+        if(this.index!=-1)
+        {
+            switch(this.index)
+            {
+                case 0:
+                    if(this.node.getPosition().x>-10)
+                    {
+                        this.node.setPosition(this.node.getPosition().x-(1*this.MoveSpeed),this.node.getPosition().y);
+                    }else
+                    {
+                        this.node.setPosition(-10,this.node.getPosition().y);
+                    }
+                    break;
+                case 1:
+                    if(this.node.getPosition().x>123)
+                    {
+                        this.node.setPosition(this.node.getPosition().x-(1*this.MoveSpeed),this.node.getPosition().y);
+                    }else
+                    {
+                        this.node.setPosition(123,this.node.getPosition().y);
+                    }
+                    break;
+                case 2:
+                    if(this.node.getPosition().x>256)
+                    {
+                        this.node.setPosition(this.node.getPosition().x-(1*this.MoveSpeed),this.node.getPosition().y);
+                    }else
+                    {
+                        this.node.setPosition(256,this.node.getPosition().y);
+                    }
+                    break;
+                case 3:
+                    if(this.node.getPosition().x>389)
+                    {
+                        this.node.setPosition(this.node.getPosition().x-(1*this.MoveSpeed),this.node.getPosition().y);
+                    }else
+                    {
+                        this.node.setPosition(389,this.node.getPosition().y);
+                    }
+                    break;
+                case 4:
+                    if(this.node.getPosition().x>522)
+                    {
+                        this.node.setPosition(this.node.getPosition().x-(1*this.MoveSpeed),this.node.getPosition().y);
+                    }else
+                    {
+                        this.node.setPosition(522,this.node.getPosition().y);
+                    }
+                    break;
+            }
+        }
+        //console.log("ticktime"+this.index);
     }
     protected onDestroy(): void 
     {
-        
+        this.unschedule(this.SetTimerTickLocationCallback);
+    }
+    
+
+    onBeginContact(selfCollider:PolygonCollider2D,otherCollider:PolygonCollider2D,contact:IPhysics2DContact | null)
+    {
+        let SoudPlay:AudioSource =  this.node.getComponent(AudioSource)
+        SoudPlay.play();
+    }
+
+    onEndContact(selfCollider: PolygonCollider2D, otherCollider: PolygonCollider2D, contact: IPhysics2DContact | null)
+    {
+        //console.log(this);
+    }
+    onPreSolve(selfCollider: PolygonCollider2D, otherCollider: PolygonCollider2D, contact: IPhysics2DContact | null)
+    {
+        // let SoudPlay:AudioSource =  this.node.getComponent(AudioSource)
+        // SoudPlay.play();
+    }
+
+    onPostSolve(selfCollider: PolygonCollider2D, otherCollider: PolygonCollider2D, contact: IPhysics2DContact | null)
+    {
+        // console.log("碰撞"+selfCollider+":"+otherCollider);
+        // let SoudPlay:AudioSource =  this.node.getComponent(AudioSource)
+        // SoudPlay.play();
     }
 }
-
-

@@ -27,7 +27,7 @@ export class PolygonalSpawner extends Component {
             let result: [Color, number] = Lobby.instance().RendomPoly();
             if(Lobby.PolyTopBarOut)
             {
-                PolygonalManager.instance().SpawnPloy(index,Lobby.PolyTopBarOut,result[1],result[0]);
+                PolygonalManager.instance().SpawnPloy(index,Lobby.PolyTopBarOut,result[1],result[0],false);
             }
         }
     }
