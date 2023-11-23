@@ -1,6 +1,7 @@
-import { _decorator, color, Component, Node ,Color, Sprite, CCInteger, SpriteFrame, CCBoolean,Scheduler,macro, PolygonCollider2D,Contact2DType,IPhysics2DContact,AudioSource} from 'cc';
+import { _decorator, color, Component, Node ,Color, Sprite, CCInteger, SpriteFrame, CCBoolean,Scheduler,macro, PolygonCollider2D,Contact2DType,IPhysics2DContact,AudioSource, Prefab, RigidBody2D} from 'cc';
 const { ccclass, property } = _decorator;
 
+import { PolygonalManager } from '../Polygonal/PolygonalManager';
 @ccclass('Attribute')
 export class Attribute extends Component {
     @property(Color)
@@ -17,6 +18,9 @@ export class Attribute extends Component {
     index:number = -1;
     @property(CCInteger)
     MoveSpeed:number = 15;
+
+    OverlopPerfabs:Map<string,Node> = new Map();
+
     protected onLoad(): void 
     {
         
@@ -27,11 +31,14 @@ export class Attribute extends Component {
 
         if(polygonCollider2D)
         {
-            polygonCollider2D.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+            polygonCollider2D.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this,true);
             polygonCollider2D.on(Contact2DType.END_CONTACT, this.onEndContact, this);
             polygonCollider2D.on(Contact2DType.PRE_SOLVE, this.onPreSolve, this);
             polygonCollider2D.on(Contact2DType.POST_SOLVE, this.onPostSolve, this);
         }
+
+        let rigidBody2D:RigidBody2D = this.node.getComponent(RigidBody2D);
+        
     }
 
     update(deltaTime: number) {
@@ -40,6 +47,14 @@ export class Attribute extends Component {
         // {
 
         // }
+        if(this.OverlopPerfabs.size>0)
+        {
+            this.OverlopPerfabs.forEach((value,key)=>
+            {
+                let va = value.name;
+                console.log(this.node.uuid+":"+va);
+            });
+        }
     }
 
     SetInfo(color:Color,number:number)
@@ -153,18 +168,23 @@ export class Attribute extends Component {
 
     onBeginContact(selfCollider:PolygonCollider2D,otherCollider:PolygonCollider2D,contact:IPhysics2DContact | null)
     {
-        let SoudPlay:AudioSource =  this.node.getComponent(AudioSource)
-        SoudPlay.play();
+        // let SoudPlay:AudioSource =  this.node.getComponent(AudioSource)
+        // SoudPlay.play();
+        this.OverlopPerfabs.set(otherCollider.node.uuid,otherCollider.node);
     }
 
     onEndContact(selfCollider: PolygonCollider2D, otherCollider: PolygonCollider2D, contact: IPhysics2DContact | null)
     {
-        //console.log(this);
+        if(this.OverlopPerfabs.has(otherCollider.node.uuid))
+        {
+            this.OverlopPerfabs.delete(otherCollider.node.uuid);
+        }
     }
     onPreSolve(selfCollider: PolygonCollider2D, otherCollider: PolygonCollider2D, contact: IPhysics2DContact | null)
     {
         // let SoudPlay:AudioSource =  this.node.getComponent(AudioSource)
         // SoudPlay.play();
+        PolygonalManager.instance().CreateCollsionParticle();
     }
 
     onPostSolve(selfCollider: PolygonCollider2D, otherCollider: PolygonCollider2D, contact: IPhysics2DContact | null)

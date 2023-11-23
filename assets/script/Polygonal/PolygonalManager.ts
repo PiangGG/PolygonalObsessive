@@ -28,6 +28,9 @@ export class PolygonalManager extends Component {
     @property(Prefab)
     PolyN:Prefab = null;
 
+    @property(Prefab)
+    CollsionParticle:Prefab = null;
+
     public PolyTopBarMap = new Map();
 
     public static PolyEdgesMap = new Map();
@@ -214,6 +217,40 @@ export class PolygonalManager extends Component {
             {
                 PolygonalManager.instance().SpawnPloy(index,Lobby.PolyTopBarOut,result[1],result[0],true);
             }
+        }
+    }
+
+    CreateCollsionParticle(CreateLocation:Vec2)
+    {
+        if(this.CollsionParticle)
+        {
+            const Particle = instantiate(this.CollsionParticle);
+            if(Particle)
+            {
+                let scene = director.getScene();
+                if(scene)
+                {
+                    var child = scene.getChildByName("UI");
+
+                    if(child)
+                    {
+                        child.addChild(Particle);
+                        Particle.setPosition(CreateLocation.x,CreateLocation.y,0);
+                    }else
+                    {
+                        console.log("UI节点没找到");
+                    }
+                }else
+                {
+                    console.log("scene节点没找到");
+                }
+            } else
+            {
+                console.log("LocalPolygonal节点没找到");
+            } 
+        }else
+        {
+            console.warn("生成预制体没找到")
         }
     }
 }
