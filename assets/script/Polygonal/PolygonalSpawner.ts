@@ -25,6 +25,7 @@ export class PolygonalSpawner extends Component {
         for(let index:number = 0;index < this.BeginPlayRendomPloyNum;index++)
         {
             let result: [Color, number] = Lobby.instance().RendomPoly();
+            console.log("随机颜色与多边形:"+result);  
             if(Lobby.PolyTopBarOut)
             {
                 PolygonalManager.instance().SpawnPloy(index,Lobby.PolyTopBarOut,result[1],result[0],false);
@@ -45,18 +46,6 @@ export class PolygonalSpawner extends Component {
 
         const location_1:Vec2 = event.getUILocation();
         
-        // let result: [Color, Prefab] = Lobby.instance().RendomPolyPrefab();
-        
-        // if(result[1])
-        // {
-        //         console.log("随机预制体成功:"+result[1].toString);
-        //         const SpawnLocation : Vec2 = new Vec2(event.getUILocation().x-360,900);
-        //         PolygonalManager.instance().Spawn(SpawnLocation,result[1],result[0])
-        // }
-        // else
-        // {
-        //         console.log("随机预制体失败");
-        // }
         if(PolygonalManager.instance().PolyTopBarMap.has(0)&&PolygonalManager.instance().PolyTopBarMap.has(1))
         {
             let PolyTopBarMap0 =  PolygonalManager.instance().PolyTopBarMap.get(0);
@@ -69,7 +58,8 @@ export class PolygonalSpawner extends Component {
                     const var2 =  PolygonalManager.PolyEdgesMap.get(attribute.Edges)
                     if(var2)
                     {
-                        PolygonalManager.instance().Spawn(SpawnLocation,var2,attribute.color)
+                        //console.log("生成颜色与多边形:"+attribute.color+":"+attribute.Edges);  
+                        PolygonalManager.instance().Spawn(SpawnLocation,var2,attribute.color,attribute.Edges)
                     }
                     
                 }
@@ -87,7 +77,8 @@ export class PolygonalSpawner extends Component {
                     const var2 =  PolygonalManager.PolyEdgesMap.get(attribute.Edges)
                     if(var2)
                     {
-                        PolygonalManager.instance().Spawn(SpawnLocation,var2,attribute.color)
+                        //console.log("生成颜色与多边形:"+attribute.color+":"+attribute.Edges);
+                        PolygonalManager.instance().Spawn(SpawnLocation,var2,attribute.color,attribute.Edges)
                     }
                     
                 }
@@ -96,7 +87,6 @@ export class PolygonalSpawner extends Component {
             }
 
             PolygonalManager.instance().MoveLeft();
-
         }
        
     }

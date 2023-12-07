@@ -153,8 +153,8 @@
     "__prefab": {
       "__id__": 7
     },
-    "enabledContactListener": false,
-    "bullet": false,
+    "enabledContactListener": true,
+    "bullet": true,
     "awakeOnLoad": true,
     "_group": 1,
     "_type": 2,
@@ -244,6 +244,10 @@
       "__id__": 11
     },
     "Edges": 5,
+    "SpriteFrame3": null,
+    "SpriteFrame4": null,
+    "index": -1,
+    "MoveSpeed": 15,
     "_id": ""
   },
   {

@@ -1,4 +1,4 @@
-import { _decorator, color, Component, Node ,Color, Sprite, CCInteger, SpriteFrame, CCBoolean,Scheduler,macro, PolygonCollider2D,Contact2DType,IPhysics2DContact,AudioSource, Prefab, RigidBody2D} from 'cc';
+import { _decorator, color, Component, Node ,Color, Sprite, CCInteger, SpriteFrame, CCBoolean,Scheduler,macro, PolygonCollider2D,Contact2DType,IPhysics2DContact,AudioSource, Prefab, RigidBody2D, Vec2,IPhysics2DManifold,IPhysics2DWorldManifold} from 'cc';
 const { ccclass, property } = _decorator;
 
 import { PolygonalManager } from '../Polygonal/PolygonalManager';
@@ -31,9 +31,9 @@ export class Attribute extends Component {
 
         if(polygonCollider2D)
         {
-            polygonCollider2D.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this,true);
-            polygonCollider2D.on(Contact2DType.END_CONTACT, this.onEndContact, this);
-            polygonCollider2D.on(Contact2DType.PRE_SOLVE, this.onPreSolve, this);
+            // polygonCollider2D.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this,true);
+            // polygonCollider2D.on(Contact2DType.END_CONTACT, this.onEndContact, this);
+            // polygonCollider2D.on(Contact2DType.PRE_SOLVE, this.onPreSolve, this);
             polygonCollider2D.on(Contact2DType.POST_SOLVE, this.onPostSolve, this);
         }
 
@@ -55,6 +55,7 @@ export class Attribute extends Component {
                 console.log(this.node.uuid+":"+va);
             });
         }
+        //console.log("Tick颜色和边数:"+this.color+":"+ this.Edges);
     }
 
     SetInfo(color:Color,number:number)
@@ -62,7 +63,7 @@ export class Attribute extends Component {
         this.color = color;
         this.Edges = number;
         let sprite = this.node.getComponent(Sprite);
-        console.log(this.node);
+        //console.log(this.node);
         if(sprite)
         {
             sprite.color =  color;
@@ -170,27 +171,49 @@ export class Attribute extends Component {
     {
         // let SoudPlay:AudioSource =  this.node.getComponent(AudioSource)
         // SoudPlay.play();
-        this.OverlopPerfabs.set(otherCollider.node.uuid,otherCollider.node);
+        //this.OverlopPerfabs.set(otherCollider.node.uuid,otherCollider.node);
+        
     }
 
     onEndContact(selfCollider: PolygonCollider2D, otherCollider: PolygonCollider2D, contact: IPhysics2DContact | null)
     {
-        if(this.OverlopPerfabs.has(otherCollider.node.uuid))
-        {
-            this.OverlopPerfabs.delete(otherCollider.node.uuid);
-        }
+        // if(this.OverlopPerfabs.has(otherCollider.node.uuid))
+        // {
+        //     this.OverlopPerfabs.delete(otherCollider.node.uuid);
+        // }
+        
     }
     onPreSolve(selfCollider: PolygonCollider2D, otherCollider: PolygonCollider2D, contact: IPhysics2DContact | null)
     {
         // let SoudPlay:AudioSource =  this.node.getComponent(AudioSource)
         // SoudPlay.play();
-        PolygonalManager.instance().CreateCollsionParticle();
+        
     }
 
     onPostSolve(selfCollider: PolygonCollider2D, otherCollider: PolygonCollider2D, contact: IPhysics2DContact | null)
     {
-        // console.log("碰撞"+selfCollider+":"+otherCollider);
-        // let SoudPlay:AudioSource =  this.node.getComponent(AudioSource)
-        // SoudPlay.play();
+        if(selfCollider.node.getComponent(Attribute)&&otherCollider.node.getComponent(Attribute))
+        {
+            // console.log("碰撞后颜色和边数:"+selfCollider.node.getComponent(Attribute).Edges+":"+ selfCollider.node.getComponent(Attribute).color);
+            // console.log("碰撞后颜色和边数:"+otherCollider.node.getComponent(Attribute).Edges+":"+ otherCollider.node.getComponent(Attribute).color);
+            if(selfCollider.node.getComponent(Attribute).Edges == otherCollider.node.getComponent(Attribute).Edges)
+            {
+                if(selfCollider.node.getComponent(Attribute).color == otherCollider.node.getComponent(Attribute).color)
+                {   
+                    let newlocation:Vec2 = new Vec2((selfCollider.node.position.x + otherCollider.node.position.x)/2,(selfCollider.node.position.y + otherCollider.node.position.y)/2);
+                    let newColor:Color = selfCollider.node.getComponent(Attribute).color;
+                    let newEdges:number = selfCollider.node.getComponent(Attribute).Edges+1;
+                    
+                    PolygonalManager.instance().SpawnNext(newlocation,newColor,newEdges)
+                    selfCollider.node.destroy();
+                    otherCollider.node.destroy(); 
+                }
+            }
+        }
+    }
+
+    SetTimerSpawnNextCallback(location:Vec2,color:Color,edges:number)
+    {
+        
     }
 }

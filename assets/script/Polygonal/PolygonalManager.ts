@@ -1,4 +1,4 @@
-import { _decorator, Component, instantiate, Node, Prefab, Vec2 ,director, Color} from 'cc';
+import { _decorator, Component, instantiate, Node, Prefab, Vec2 ,director, Color,PolygonCollider2D, RigidBody2D} from 'cc';
 
 import { Attribute } from '../Polygonal/PolygonalAttribute';
 import { Lobby } from '../LobbyManager';
@@ -31,9 +31,12 @@ export class PolygonalManager extends Component {
     @property(Prefab)
     CollsionParticle:Prefab = null;
 
+    static CollsionParticleCreate:Prefab = null;
     public PolyTopBarMap = new Map();
 
     public static PolyEdgesMap = new Map();
+
+    Spawning:Boolean = false;
 
     public static instance(){
         if(!this._instance){
@@ -51,6 +54,7 @@ export class PolygonalManager extends Component {
         PolygonalManager.PolyEdgesMap.set(4,this.Poly7);
         PolygonalManager.PolyEdgesMap.set(5,this.Poly8);
         PolygonalManager.PolyEdgesMap.set(6,this.PolyN);
+        PolygonalManager.CollsionParticleCreate = this.CollsionParticle;
     }
 
     start() {
@@ -137,17 +141,17 @@ export class PolygonalManager extends Component {
         }
     }
 
-    Spawn(location:Vec2,Polygonal:Prefab,color:Color)
+    Spawn(location:Vec2,Polygonal:Prefab,color:Color,edges:number)
     {
         if(Polygonal)
         {
             const LocalPolygonal = instantiate(Polygonal);
             console.log("生成位置:x = "+location);
 
-            let attribute = LocalPolygonal.getComponent(Attribute)
+            let attribute = LocalPolygonal.getComponent(Attribute);
             if(attribute)
             {
-                attribute.SetInfo(color,3);
+                attribute.SetInfo(color,edges);
             }
 
             if(LocalPolygonal)
@@ -177,6 +181,61 @@ export class PolygonalManager extends Component {
         {
             console.log("生成Polygonal失败"+location);
         }
+    }
+
+    SpawnNext(location:Vec2,color:Color,edges:number)
+    {
+        if(this.Spawning)
+        {
+            return;
+        }
+        this.Spawning = true;
+        this.schedule(this.SetTimerSpawnNextCallback, 0,0,0.1);
+
+        if(PolygonalManager.PolyEdgesMap.has(edges))
+        {
+            const LocalPolygonal = instantiate(PolygonalManager.PolyEdgesMap.get(edges));
+            console.log("生成位置:x = "+location);
+
+            let attribute = LocalPolygonal.getComponent(Attribute);
+            if(attribute)
+            {
+                attribute.SetInfo(color,edges);
+            }
+
+            if(LocalPolygonal)
+            {
+                let scene = director.getScene();
+                if(scene)
+                {
+                    var child = scene.getChildByName("UI");
+
+                    if(child)
+                    {
+                        child.addChild(LocalPolygonal);
+                        LocalPolygonal.setPosition(location.x,location.y);
+
+                        //let rigidBody2D = LocalPolygonal.getComponent(RigidBody2D);
+                        //rigidBody2D.linearVelocity = new Vec2(0,10);
+                    }else
+                    {
+                        console.log("UI节点没找到");
+                    }
+                }else
+                {
+                    console.log("scene节点没找到");
+                }
+            } else
+            {
+                console.log("LocalPolygonal节点没找到");
+            } 
+        }
+        
+    }
+
+    SetTimerSpawnNextCallback()
+    {
+        this.Spawning = false;
     }
 
     MoveLeft()
@@ -220,26 +279,30 @@ export class PolygonalManager extends Component {
         }
     }
 
-    CreateCollsionParticle(CreateLocation:Vec2)
+    CreateCollsionParticle(CreateLocation:Vec2,selfCollider: PolygonCollider2D,)
     {
-        if(this.CollsionParticle)
+        if( PolygonalManager.CollsionParticleCreate&&selfCollider)
         {
-            const Particle = instantiate(this.CollsionParticle);
+            const Particle = instantiate(PolygonalManager.CollsionParticleCreate);
             if(Particle)
             {
-                let scene = director.getScene();
-                if(scene)
+                //let scene = director.getScene();
+                if(selfCollider)
                 {
-                    var child = scene.getChildByName("UI");
+                    // var child = scene.getChildByName("UI");
 
-                    if(child)
-                    {
-                        child.addChild(Particle);
-                        Particle.setPosition(CreateLocation.x,CreateLocation.y,0);
-                    }else
-                    {
-                        console.log("UI节点没找到");
-                    }
+                    // if(child)
+                    // {
+                    //     this.node.addChild(Particle);
+                    //     Particle.setPosition(CreateLocation.x,CreateLocation.y);
+                    //     console.log("碰撞点:"+CreateLocation);
+                    // }else
+                    // {
+                    //     console.log("UI节点没找到");
+                    // }
+                    selfCollider.node.addChild(Particle);
+                    Particle.setPosition(CreateLocation.x,CreateLocation.y);
+                    console.log("碰撞点:"+CreateLocation);
                 }else
                 {
                     console.log("scene节点没找到");
